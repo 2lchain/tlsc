@@ -23,10 +23,10 @@ CPPFLAGS := $(INC_FLAGS) -MMD -MP
 
 CC := gcc
 
-CFLAGS := -Wall -Wextra
+CFLAGS := -Wall -Wextra -lsodium
 
-#run: $(BUILD_DIR)/$(TARGET_EXEC)
-#	./$(BUILD_DIR)/$(TARGET_EXEC)
+run: $(BUILD_DIR)/$(TARGET_EXEC)
+	./$(BUILD_DIR)/$(TARGET_EXEC)
 
 $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS)
 	@echo "Linking $@"

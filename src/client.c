@@ -13,7 +13,7 @@ int ClientCreate(Client *client, char *hostname, char *port) {
     return 0;
 }
 
-char *ClientAddressToString(Client *client) {
+const char *ClientAddressToString(Client *client) {
     assert(client != NULL);
     static char ip_str[INET_ADDRSTRLEN];
     return inet_ntop(AF_INET, &client->address, ip_str, INET_ADDRSTRLEN);

@@ -11,4 +11,4 @@ typedef struct Client {
 
 int ClientCreate(Client *client, char *hostname, char *port);
 
-char *ClientAddressToString(Client *client);
+const char *ClientAddressToString(Client *client);
