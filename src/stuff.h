@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
+
 
 static inline bool IsLittleEndian() {
     uint16_t a= 1;

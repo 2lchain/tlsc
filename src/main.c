@@ -2,8 +2,9 @@
 
 // #include "client.h"
 #include "listener.h"
-#include "stream.h"
+#include "sock_stream.h"
 #include "stuff.h"
+#include "wr.h"
 
 typedef enum RecordType
 {
@@ -15,6 +16,8 @@ typedef enum RecordType
 } RecordType;
 
 #define LEGACY_RECORD_VERSION 0x0303
+
+char record_buff[17000] = {};
 
 int main()
 {
@@ -29,15 +32,17 @@ int main()
         int sock = Accept(&l, &new_addr);
         printf("new connection.....\n");
 
-        Stream stream = StreamInit(sock);
+        SockStream stream = SockStreamInit(sock);
 
-        uint8_t record_type = ReadU8(&stream);
+        RW rw = RWInit(&stream, (read_fn)SockRead, (write_fn)SockWrite);
 
-        uint16_t legacy_record_version = ReadU16(&stream);
+        uint8_t record_type = ReadU8(&rw);
+
+        uint16_t legacy_record_version = ReadU16(&rw);
 
         printf("Legacy v: 0x%x\n", legacy_record_version);
 
-        uint16_t length = ReadU16(&stream);
+        uint16_t length = ReadU16(&rw);
 
         printf("Record Length: %d\n", length);
 
@@ -46,7 +51,8 @@ int main()
         {
         case HANDSHAKE:
             printf("Handshake record type\n");
-
+            int n = ReadAll(&rw, record_buff, length);
+            assert(n == length);
             break;
 
         case CHANGE_CIPHER_SPEC:
@@ -75,7 +81,7 @@ int main()
             break;
         }
 
-        Close(&stream);
+        SockClose(&stream);
     }
 
     // printf("")
